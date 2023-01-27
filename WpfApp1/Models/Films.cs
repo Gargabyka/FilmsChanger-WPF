@@ -1,4 +1,5 @@
 ﻿using System;
+using FilmsChanger.Enums;
 
 namespace FilmsChanger.Models
 {
@@ -23,11 +24,11 @@ namespace FilmsChanger.Models
         /// <summary>
         /// Тип
         /// </summary>
-        public string Type => IsAnime ? "Аниме" : "Фильм";
+        public string Type => TypeEnum == TypeEnum.IsAnime ? "Аниме" : "Фильм";
 
         /// <summary>
-        /// Признак аниме
+        /// Тип аниме/фильм
         /// </summary>
-        public bool IsAnime { get; set; }
+        public TypeEnum TypeEnum { get; set; }
     }
 }

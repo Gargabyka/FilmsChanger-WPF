@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using FilmsChanger.Enums;
 using FilmsChanger.Models;
 
 namespace FilmsChanger.Service
@@ -35,8 +36,8 @@ namespace FilmsChanger.Service
 
             if (_listFilmService.FilmsList != null)
             {
-                var listFilms = _listFilmService.FilmsList.Where(x => !x.IsAnime && !x.IsView).ToList();
-                var listAnime = _listFilmService.FilmsList.Where(x => x.IsAnime && !x.IsView).ToList();
+                var listFilms = _listFilmService.FilmsList.Where(x => x.TypeEnum == TypeEnum.IsFilm && !x.IsView).ToList();
+                var listAnime = _listFilmService.FilmsList.Where(x => x.TypeEnum == TypeEnum.IsAnime && !x.IsView).ToList();
 
                 result = IsFilm
                     ? GetRandom(listFilms, listAnime.Count, listFilms.Count)
@@ -129,8 +130,8 @@ namespace FilmsChanger.Service
             {
                 var film = _listFilmService.FilmsList.SingleOrDefault(x => x.Id == change.Id);
 
-                change.AnimeCount = _listFilmService.FilmsList.Count(x => x.IsAnime && !x.IsView);
-                change.FilmCount = _listFilmService.FilmsList.Count(x => !x.IsAnime && !x.IsView);
+                change.AnimeCount = _listFilmService.FilmsList.Count(x => x.TypeEnum == TypeEnum.IsAnime && !x.IsView);
+                change.FilmCount = _listFilmService.FilmsList.Count(x => x.TypeEnum == TypeEnum.IsFilm && !x.IsView);
                 change.Name = film?.FilmName ?? "Фильм/аниме не найден";
             }
 

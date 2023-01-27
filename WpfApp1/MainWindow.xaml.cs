@@ -80,11 +80,11 @@ namespace FilmsChanger
                     break;
                 case "AnimeRadio":
                     _groupFilter.RemoveFilter(FilterEnum.IsFilm);
-                    _groupFilter.AddFilter(FilterEnum.IsAnime,x => ((Films)x).IsAnime);
+                    _groupFilter.AddFilter(FilterEnum.IsAnime,x => ((Films)x).TypeEnum == TypeEnum.IsAnime);
                     break;
                 case "FilmRadio":
                     _groupFilter.RemoveFilter(FilterEnum.IsAnime);
-                    _groupFilter.AddFilter(FilterEnum.IsFilm,x => !((Films)x).IsAnime);
+                    _groupFilter.AddFilter(FilterEnum.IsFilm,x => ((Films)x).TypeEnum == TypeEnum.IsFilm);
                     break;
                 case "AllRadio":
                     _groupFilter.RemoveFilter(FilterEnum.IsFilm);

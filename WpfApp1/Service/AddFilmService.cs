@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using FilmsChanger.Enums;
 using FilmsChanger.Models;
 
 namespace FilmsChanger.Service
@@ -27,7 +28,7 @@ namespace FilmsChanger.Service
             if (_listFilmService.FilmsList != null)
             {
                 var filmName = _listFilmService.FilmsList
-                    .Where(x=>x.IsAnime == !isFilm)
+                    .Where(x=>x.TypeEnum == TypeEnum.IsFilm)
                     .Select(x => x.FilmName?.ToLower())
                     .ToList();
 
@@ -57,7 +58,7 @@ namespace FilmsChanger.Service
                         {
                             Id = Guid.NewGuid(),
                             FilmName = film,
-                            IsAnime = !isFilm
+                            TypeEnum = !isFilm ? TypeEnum.IsAnime : TypeEnum.IsFilm
                         };
                         newFilmsList.Add(newFilm);
                     }
