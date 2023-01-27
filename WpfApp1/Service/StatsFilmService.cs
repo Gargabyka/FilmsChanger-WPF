@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FilmsChanger.Enums;
 using FilmsChanger.Models;
 
 namespace FilmsChanger.Service
@@ -30,10 +31,10 @@ namespace FilmsChanger.Service
                 var stats = new Stats
                 {
                     TotalCount = list.Count,
-                    FilmCount = list.Count(x => !x.IsAnime),
-                    AnimeCount = list.Count(x => x.IsAnime),
-                    ViewAnimeCount = list.Count(x => x.IsAnime && x.IsView),
-                    ViewFilmCount = list.Count(x => !x.IsAnime && x.IsView),
+                    FilmCount = list.Count(x => x.TypeEnum == TypeEnum.IsFilm),
+                    AnimeCount = list.Count(x => x.TypeEnum == TypeEnum.IsAnime),
+                    ViewAnimeCount = list.Count(x => x.TypeEnum == TypeEnum.IsAnime && x.IsView),
+                    ViewFilmCount = list.Count(x => x.TypeEnum == TypeEnum.IsFilm && x.IsView),
                 };
 
                 return stats;

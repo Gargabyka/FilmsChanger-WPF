@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using FilmsChanger.Enums;
 using FilmsChanger.Models;
 
 namespace FilmsChanger.Service
@@ -26,8 +27,8 @@ namespace FilmsChanger.Service
                     if (filmRemove != null)
                     {
                         var filmName = filmRemove.FilmName;
-                        var isAnime = filmRemove.IsAnime;
-                        var isAnimeStr = isAnime ? "Аниме" : "Фильм";
+                        var isAnime = filmRemove.TypeEnum;
+                        var isAnimeStr = isAnime == TypeEnum.IsAnime ? "Аниме" : "Фильм";
 
                         FilmsList.Remove(filmRemove);
 
