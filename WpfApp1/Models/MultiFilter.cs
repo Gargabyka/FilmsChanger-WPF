@@ -1,4 +1,5 @@
 ﻿using System;
+using FilmsChanger.Enums;
 
 namespace FilmsChanger.Models
 {
@@ -10,11 +11,11 @@ namespace FilmsChanger.Models
         /// <summary>
         /// Фильтр
         /// </summary>
-        public Predicate<Object> Filter { get; set; }
+        public Predicate<object>? Filter { get; set; }
 
         /// <summary>
         /// Имя фильтра
         /// </summary>
-        public string Name { get; set; }
+        public FilterEnum Name { get; set; }
     }
 }

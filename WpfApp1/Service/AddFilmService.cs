@@ -23,59 +23,67 @@ namespace FilmsChanger.Service
         {
             var filmList = films.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
             var newFilmsList = new List<Films>();
-            var lastId = _listFilmService.FilmsList.OrderByDescending(x => x.Id).Select(x => x.Id).FirstOrDefault();
             var isFilmStr = isFilm ? "фильмов" : "аниме";
-            var filmName = _listFilmService.FilmsList.Where(x=>x.IsAnime == !isFilm).Select(x => x.FilmName.ToLower()).ToList();
-            var dublicateCount = 0;
-            var dublicateStr = string.Empty;
-
-            if (string.IsNullOrEmpty(films))
+            if (_listFilmService.FilmsList != null)
             {
-                MessageBox.Show("Не добавлены фильмы/аниме",
-                    "Ошибка",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
-                return false;
-            }
+                var filmName = _listFilmService.FilmsList
+                    .Where(x=>x.IsAnime == !isFilm)
+                    .Select(x => x.FilmName?.ToLower())
+                    .ToList();
 
-            try
-            {
-                foreach (var film in filmList)
+                var dublicateCount = 0;
+                string dublicateStr;
+
+                if (string.IsNullOrEmpty(films))
                 {
-                    if (filmName.Contains(film.ToLower()))
-                    {
-                        dublicateCount++;
-                        continue;
-                    }
-
-                    var newFilm = new Films
-                    {
-                        Id = ++lastId,
-                        FilmName = film,
-                        IsAnime = !isFilm
-                    };
-                    newFilmsList.Add(newFilm);
+                    MessageBox.Show("Не добавлены фильмы/аниме",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                    return false;
                 }
 
-                _listFilmService.FilmsList.AddRange(newFilmsList);
+                try
+                {
+                    foreach (var film in filmList)
+                    {
+                        if (filmName.Contains(film.ToLower()))
+                        {
+                            dublicateCount++;
+                            continue;
+                        }
 
-                dublicateStr = dublicateCount == 0 ? string.Empty : $"Найдено дубликатов: {dublicateCount}";
+                        var newFilm = new Films
+                        {
+                            Id = Guid.NewGuid(),
+                            FilmName = film,
+                            IsAnime = !isFilm
+                        };
+                        newFilmsList.Add(newFilm);
+                    }
 
-                MessageBox.Show($"Добавлено {newFilmsList.Count} новых {isFilmStr}. {Environment.NewLine}{dublicateStr}",
-                    "Добавлено",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    _listFilmService.FilmsList.AddRange(newFilmsList);
 
-                return true;
+                    dublicateStr = dublicateCount == 0 ? string.Empty : $"Найдено дубликатов: {dublicateCount}";
+
+                    MessageBox.Show($"Добавлено {newFilmsList.Count} новых {isFilmStr}. {Environment.NewLine}{dublicateStr}",
+                        "Добавлено",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"Не удалось добавить фильмы/аниме{Environment.NewLine}Ошибка:{e.InnerException}",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                    return false;
+                }
             }
-            catch (Exception e)
-            {
-                MessageBox.Show("Не удалось добавить фильмы/аниме",
-                    "Ошибка",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
-                return false;
-            }
+
+            return false;
         }
     }
 }

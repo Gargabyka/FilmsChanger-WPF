@@ -19,22 +19,27 @@ namespace FilmsChanger.Service
         /// </summary>
         public Stats GetStats()
         {
-            if (_listFilmService.FilmsList.Count == 0)
+            if (_listFilmService.FilmsList != null && _listFilmService.FilmsList.Count == 0)
             {
                 return new Stats();
             }
 
             var list = _listFilmService.FilmsList;
-            var stats = new Stats
+            if (list != null)
             {
-                TotalCount = $"Всего фильмов/аниме: {list.Count}",
-                FilmCount = $"Фильмов: {list.Count(x => !x.IsAnime)}",
-                AnimeCount = $"Аниме: {list.Count(x => x.IsAnime)}",
-                ViewAnimeCount = $"Просмотрено: {list.Count(x => x.IsAnime && x.IsView)}",
-                ViewFilmCount = $"Просмотрено: {list.Count(x => !x.IsAnime && x.IsView)}",
-            };
+                var stats = new Stats
+                {
+                    TotalCount = list.Count,
+                    FilmCount = list.Count(x => !x.IsAnime),
+                    AnimeCount = list.Count(x => x.IsAnime),
+                    ViewAnimeCount = list.Count(x => x.IsAnime && x.IsView),
+                    ViewFilmCount = list.Count(x => !x.IsAnime && x.IsView),
+                };
 
-            return stats;
+                return stats;
+            }
+
+            return new Stats();
         }
     }
 }

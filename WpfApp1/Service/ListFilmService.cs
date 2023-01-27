@@ -11,7 +11,7 @@ namespace FilmsChanger.Service
     /// </summary>
     public class ListFilmService
     {
-        public List<Films> FilmsList = new List<Films>();
+        public List<Films>? FilmsList = new List<Films>();
 
         /// <summary>
         /// Удалить фильм
@@ -20,24 +20,27 @@ namespace FilmsChanger.Service
         {
             try
             {
-                var filmRemove = FilmsList.Where(x => x.Id == films.Id).SingleOrDefault();
-                if (filmRemove != null)
+                if (FilmsList != null)
                 {
-                    var filmName = filmRemove.FilmName;
-                    var isAnime = filmRemove.IsAnime;
-                    var isAnimeStr = isAnime ? "Аниме" : "Фильм";
+                    var filmRemove = FilmsList.SingleOrDefault(x => x.Id == films.Id);
+                    if (filmRemove != null)
+                    {
+                        var filmName = filmRemove.FilmName;
+                        var isAnime = filmRemove.IsAnime;
+                        var isAnimeStr = isAnime ? "Аниме" : "Фильм";
 
-                    FilmsList.Remove(filmRemove);
+                        FilmsList.Remove(filmRemove);
 
-                    MessageBox.Show($"{isAnimeStr}:{filmName} успешно удален",
-                        "Удаление",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
+                        MessageBox.Show($"{isAnimeStr}:{filmName} успешно удален",
+                            "Удаление",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+                    }
                 }
             }
             catch (Exception e)
             {
-                MessageBox.Show("Не удалось удалить фильмы/аниме ?",
+                MessageBox.Show($"Не удалось удалить фильмы/аниме{Environment.NewLine}Ошибка:{e.InnerException}",
                     "Ошибка",
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);

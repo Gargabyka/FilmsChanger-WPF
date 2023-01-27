@@ -28,20 +28,23 @@ namespace FilmsChanger.Service
         {
             var result = new Change();
 
-            if (_listFilmService.FilmsList.Count == 0)
+            if (_listFilmService.FilmsList != null && _listFilmService.FilmsList.Count == 0)
             {
                 return new Change();
             }
 
-            var listFilms = _listFilmService.FilmsList.Where(x => !x.IsAnime && !x.IsView).ToList();
-            var listAnime = _listFilmService.FilmsList.Where(x => x.IsAnime && !x.IsView).ToList();
+            if (_listFilmService.FilmsList != null)
+            {
+                var listFilms = _listFilmService.FilmsList.Where(x => !x.IsAnime && !x.IsView).ToList();
+                var listAnime = _listFilmService.FilmsList.Where(x => x.IsAnime && !x.IsView).ToList();
 
-            result = IsFilm
-                ? GetRandom(listFilms, listAnime.Count, listFilms.Count)
-                : GetRandom(listAnime, listAnime.Count, listFilms.Count);
+                result = IsFilm
+                    ? GetRandom(listFilms, listAnime.Count, listFilms.Count)
+                    : GetRandom(listAnime, listAnime.Count, listFilms.Count);
 
 
-            IsFilm = IsFilmOrAnime(listFilms.Count, listAnime.Count);
+                IsFilm = IsFilmOrAnime(listFilms.Count, listAnime.Count);
+            }
 
             Change = result;
 
@@ -80,34 +83,37 @@ namespace FilmsChanger.Service
         /// <summary>
         /// Выбор фильма
         /// </summary>
-        public bool SetFilm(int id)
+        public bool SetFilm(Guid id)
         {
-            var film = _listFilmService.FilmsList.SingleOrDefault(x => x.Id == id);
-            var isFilmStr = !IsFilm ? "фильм" : "аниме";
-
-            if (film == null)
+            if (_listFilmService.FilmsList != null)
             {
-                MessageBox.Show("Не удалось найти фильмы/аниме",
-                    "Ошибка",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
-                return false;
-            }
+                var film = _listFilmService.FilmsList.SingleOrDefault(x => x.Id == id);
+                var isFilmStr = !IsFilm ? "фильм" : "аниме";
 
-            if (MessageBox.Show($"Выбрать для просмотра {isFilmStr} - {film.FilmName} ?",
+                if (film == null)
+                {
+                    MessageBox.Show("Не удалось найти фильмы/аниме",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                    return false;
+                }
+
+                if (MessageBox.Show($"Выбрать для просмотра {isFilmStr} - {film.FilmName} ?",
+                        "Выбор",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question) == MessageBoxResult.No)
+                {
+                    return false;
+                }
+
+                film.IsView = true;
+
+                MessageBox.Show($"Выбран {isFilmStr} - {film.FilmName}",
                     "Выбор",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question) == MessageBoxResult.No)
-            {
-                return false;
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
             }
-
-            film.IsView = true;
-
-            MessageBox.Show($"Выбран {isFilmStr} - {film.FilmName}",
-                "Выбор",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
 
             return true;
         }
@@ -119,16 +125,16 @@ namespace FilmsChanger.Service
         {
             var change = new Change();
 
-            if (change != null)
+            if (_listFilmService.FilmsList != null)
             {
                 var film = _listFilmService.FilmsList.SingleOrDefault(x => x.Id == change.Id);
 
                 change.AnimeCount = _listFilmService.FilmsList.Count(x => x.IsAnime && !x.IsView);
                 change.FilmCount = _listFilmService.FilmsList.Count(x => !x.IsAnime && !x.IsView);
                 change.Name = film?.FilmName ?? "Фильм/аниме не найден";
-
-                Change = change;
             }
+
+            Change = change;
         }
 
         private bool IsFilmOrAnime(int countFilm, int countAnime)

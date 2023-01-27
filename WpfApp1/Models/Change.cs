@@ -10,26 +10,26 @@ namespace FilmsChanger.Models
     [Serializable]
     public class Change : INotifyPropertyChanged
     {
-        private int animeCount;
-        private int filmCount;
-        private string name;
-        private string nameDb;
+        private int _animeCount;
+        private int _filmCount;
+        private string? _name;
+        private string? _nameDb;
 
 
         /// <summary>
         /// Id фильма/аниме
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Кол-во аниме
         /// </summary>
         public int AnimeCount
         {
-            get { return animeCount; }
+            get { return _animeCount; }
             set
             {
-                animeCount = value;
+                _animeCount = value;
                 OnPropertyChanged("AnimeCount");
             }
         }
@@ -39,10 +39,10 @@ namespace FilmsChanger.Models
         /// </summary>
         public int FilmCount
         {
-            get { return filmCount; }
+            get { return _filmCount; }
             set
             {
-                filmCount = value;
+                _filmCount = value;
                 OnPropertyChanged("FilmCount");
             }
         }
@@ -50,12 +50,12 @@ namespace FilmsChanger.Models
         /// <summary>
         /// Наименование фильма/аниме
         /// </summary>
-        public string Name
+        public string? Name
         {
-            get { return name; }
+            get { return _name; }
             set
             {
-                name = value;
+                _name = value;
                 OnPropertyChanged("Name");
             }
         }
@@ -63,12 +63,12 @@ namespace FilmsChanger.Models
         /// <summary>
         /// Наименование базы
         /// </summary>
-        public string NameDb
+        public string? NameDb
         {
-            get { return nameDb; }
+            get { return _nameDb; }
             set
             {
-                nameDb = value;
+                _nameDb = value;
                 OnPropertyChanged("NameDb");
             }
         }

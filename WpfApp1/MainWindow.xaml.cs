@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using FilmsChanger.Enums;
 using FilmsChanger.Models;
 using FilmsChanger.Service;
 
@@ -16,7 +17,7 @@ namespace FilmsChanger
     {
         private readonly ListFilmService _listFilmService;
         private readonly GroupFilterService _groupFilter;
-        private readonly ListCollectionView _view;
+        private readonly ListCollectionView? _view;
         private readonly AddFilmService _addFilmService;
         private readonly StatsFilmService _statsFilmService;
         private readonly ChangeFilmService _changeFilmService;
@@ -39,7 +40,8 @@ namespace FilmsChanger
 
             dgAllList.ItemsSource = _listFilmService.FilmsList;
 
-            if (CollectionViewSource.GetDefaultView(this.dgAllList.ItemsSource) is ListCollectionView view)
+            var itemsSource = this.dgAllList.ItemsSource;
+            if (itemsSource != null && CollectionViewSource.GetDefaultView(itemsSource) is ListCollectionView view)
             {
                 _view = view;
             }
@@ -58,8 +60,7 @@ namespace FilmsChanger
             }
 
             var button = (Button)sender;
-            var film = button.DataContext as Films;
-            _listFilmService.DeleteFilms(film);
+            if (button.DataContext is Films film) _listFilmService.DeleteFilms(film);
             _view?.Refresh();
         }
 
@@ -70,34 +71,37 @@ namespace FilmsChanger
             switch (pressed.Name)
             {
                 case "IsView":
-                    _groupFilter.RemoveFilter("NotView");
-                    _groupFilter.AddFilter("IsView",x => ((Films)x).IsView);
+                    _groupFilter.RemoveFilter(FilterEnum.NotView);
+                    _groupFilter.AddFilter(FilterEnum.IsView,x => ((Films)x).IsView);
                     break;
                 case "NotView":
-                    _groupFilter.RemoveFilter("IsView");
-                    _groupFilter.AddFilter("NotView",x => !((Films)x).IsView);
+                    _groupFilter.RemoveFilter(FilterEnum.IsView);
+                    _groupFilter.AddFilter(FilterEnum.NotView,x => !((Films)x).IsView);
                     break;
                 case "AnimeRadio":
-                    _groupFilter.RemoveFilter("IsFilm");
-                    _groupFilter.AddFilter("IsAnime",x => ((Films)x).IsAnime);
+                    _groupFilter.RemoveFilter(FilterEnum.IsFilm);
+                    _groupFilter.AddFilter(FilterEnum.IsAnime,x => ((Films)x).IsAnime);
                     break;
                 case "FilmRadio":
-                    _groupFilter.RemoveFilter("IsAnime");
-                    _groupFilter.AddFilter("IsFilm",x => !((Films)x).IsAnime);
+                    _groupFilter.RemoveFilter(FilterEnum.IsAnime);
+                    _groupFilter.AddFilter(FilterEnum.IsFilm,x => !((Films)x).IsAnime);
                     break;
                 case "AllRadio":
-                    _groupFilter.RemoveFilter("IsFilm");
-                    _groupFilter.RemoveFilter("IsAnime");
+                    _groupFilter.RemoveFilter(FilterEnum.IsFilm);
+                    _groupFilter.RemoveFilter(FilterEnum.IsAnime);
                     break;
                 case "AllView":
-                    _groupFilter.RemoveFilter("NotView");
-                    _groupFilter.RemoveFilter("IsView");
+                    _groupFilter.RemoveFilter(FilterEnum.NotView);
+                    _groupFilter.RemoveFilter(FilterEnum.IsView);
                     break;
 
             }
 
-            _view.Filter = _groupFilter.Filter;
-            _view.Refresh();
+            if (_view != null)
+            {
+                _view.Filter = _groupFilter.Filter;
+                _view.Refresh();
+            }
         }
 
         private void IsFilm_Checked(object sender, RoutedEventArgs e)
@@ -108,10 +112,10 @@ namespace FilmsChanger
         private void AddFilmBtn_Click(object sender, RoutedEventArgs e)
         {
             var radioButton = (Button)sender;
-            var isFilm = (bool)IsFilm.IsChecked;
+            var isFilm = IsFilm.IsChecked;
             var filmList = FilmList.Text;
 
-            _addFilmService.AddFilms(filmList, isFilm);
+            _addFilmService.AddFilms(filmList, (bool)isFilm);
 
             radioButton.IsEnabled = false;
             IsFilm.IsChecked = false;

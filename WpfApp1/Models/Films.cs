@@ -8,12 +8,12 @@ namespace FilmsChanger.Models
         /// <summary>
         /// Id
         /// </summary>
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Название фильма/аниме
         /// </summary>
-        public string FilmName { get; set; }
+        public string? FilmName { get; set; }
 
         /// <summary>
         /// Признак просмотра

@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.Windows;
 using FilmsChanger.Models;
 
 namespace FilmsChanger.Service
@@ -26,22 +31,43 @@ namespace FilmsChanger.Service
         /// </summary>
         private SaveLoad LoadFile()
         {
-            var isFileExists = File.Exists("saved.dat");
-
-            if (isFileExists)
+            var result = new SaveLoad();
+            try
             {
-                var serializable = new BinaryFormatter();
-                using (var reader = new FileStream("saved.dat", FileMode.Open))
-                {
-                    var result = (SaveLoad)serializable.Deserialize(reader);
-                    if (result != null)
-                    {
-                        _listFilmService.FilmsList = new List<Films>(result.Films);
-                        _changeFilmService.Change = result.Change;
+                var isFileExists = File.Exists("saved.json");
 
-                        return result;
+                if (isFileExists)
+                {
+                    //var serializable = new BinaryFormatter();
+                    //using (var reader = new FileStream("saved.dat", FileMode.Open))
+                    //{
+                    //    result = (SaveLoad)serializable.Deserialize(reader);
+                    //    if (result != null)
+                    //    {
+                    //        _listFilmService.FilmsList = new List<Films>(result.Films);
+                    //        _changeFilmService.Change = result.Change;
+
+                    //        return result;
+                    //    }
+                    //}
+
+                    using (FileStream fs = new FileStream("saved.json", FileMode.OpenOrCreate))
+                    {
+                        result =  JsonSerializer.Deserialize<SaveLoad>(fs);
+                        if (result != null)
+                        {
+                            _listFilmService.FilmsList = new List<Films>(result.Films ?? new List<Films>());
+                            _changeFilmService.Change = result.Change ?? new Change();
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Не удалось загрузить сохраненные данные!{Environment.NewLine}Ошибка:{e}",
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
             }
 
             return new SaveLoad();
@@ -52,18 +78,30 @@ namespace FilmsChanger.Service
         /// </summary>
         public void Save()
         {
-            var films = _listFilmService.FilmsList;
-
-            _saveLoad.Films = films;
-            _saveLoad.Change = _changeFilmService.Change;
-
-            if (_saveLoad != null)
+            try
             {
-                var serializer = new BinaryFormatter();
-                using (var writer = new FileStream("saved.dat", FileMode.OpenOrCreate))
+                var films = _listFilmService.FilmsList;
+
+                _saveLoad.Films = films;
+                _saveLoad.Change = _changeFilmService.Change;
+
+                //var serializer = new BinaryFormatter();
+                //using (var writer = new FileStream("saved.dat", FileMode.OpenOrCreate))
+                //{
+                //    serializer.Serialize(writer, _saveLoad);
+                //}
+
+                using (FileStream fs = new FileStream("saved.json", FileMode.OpenOrCreate))
                 {
-                    serializer.Serialize(writer, _saveLoad);
+                    JsonSerializer.Serialize(fs, _saveLoad);
                 }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Не удалось сохранить данные!{Environment.NewLine}Ошибка:{e}",
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
             }
         }
     }

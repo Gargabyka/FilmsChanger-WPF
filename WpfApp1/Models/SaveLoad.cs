@@ -12,11 +12,11 @@ namespace FilmsChanger.Models
         /// <summary>
         /// Фильмы
         /// </summary>
-        public List<Films> Films { get; set; }
+        public List<Films>? Films { get; set; }
 
         /// <summary>
         /// Выбор
         /// </summary>
-        public Change Change { get; set; }
+        public Change? Change { get; set; }
     }
 }

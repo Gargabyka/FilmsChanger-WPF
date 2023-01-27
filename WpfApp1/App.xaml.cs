@@ -31,7 +31,7 @@ namespace FilmsChanger
         private void OnStartup(object sender, StartupEventArgs e)
         {
             var mainWindow = serviceProvider.GetService<MainWindow>();
-            mainWindow.Show();
+            mainWindow?.Show();
         }
     }
 }

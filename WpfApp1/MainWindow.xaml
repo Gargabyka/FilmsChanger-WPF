@@ -93,11 +93,11 @@
                            HorizontalAlignment="Stretch"/>
                 </TabItem.Header>
                 <Grid>
-                    <Label Content="{Binding TotalCount}" HorizontalAlignment="Left" Margin="60,10,0,0" VerticalAlignment="Top" FontSize="20"/>
-                    <Label Content="{Binding ViewFilmCount}" HorizontalAlignment="Left" Margin="70,90,0,0" VerticalAlignment="Top" FontSize="16"/>
-                    <Label Content="{Binding FilmCount }" HorizontalAlignment="Left" Margin="60,70,0,0" VerticalAlignment="Top" FontSize="16"/>
-                    <Label Content="{Binding AnimeCount}" Margin="60,140,0,0" VerticalAlignment="Top" FontSize="16"/>
-                    <Label Content="{Binding ViewAnimeCount}" HorizontalAlignment="Left" Margin="70,160,0,0" VerticalAlignment="Top" FontSize="16"/>
+                    <Label Content="{Binding TotalCountStr}" HorizontalAlignment="Left" Margin="60,10,0,0" VerticalAlignment="Top" FontSize="20"/>
+                    <Label Content="{Binding ViewFilmCountStr}" HorizontalAlignment="Left" Margin="70,90,0,0" VerticalAlignment="Top" FontSize="16"/>
+                    <Label Content="{Binding FilmCountStr}" HorizontalAlignment="Left" Margin="60,70,0,0" VerticalAlignment="Top" FontSize="16"/>
+                    <Label Content="{Binding AnimeCountStr}" Margin="60,140,0,0" VerticalAlignment="Top" FontSize="16"/>
+                    <Label Content="{Binding ViewAnimeCountStr}" HorizontalAlignment="Left" Margin="70,160,0,0" VerticalAlignment="Top" FontSize="16"/>
 
                 </Grid>
             </TabItem>

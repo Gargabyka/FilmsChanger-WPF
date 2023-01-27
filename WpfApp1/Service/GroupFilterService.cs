@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FilmsChanger.Enums;
 using FilmsChanger.Models;
 
 namespace FilmsChanger.Service
@@ -10,25 +11,21 @@ namespace FilmsChanger.Service
     /// </summary>
     public class GroupFilterService
     {
-        //private List<MultiFilter<object>> _filters;
-
         private List<MultiFilter> _filters;
 
         public Predicate<object> Filter { get; private set; }
 
         public GroupFilterService()
         {
-            //_filters = new List<MultiFilter<object>>();
             _filters = new List<MultiFilter>();
             Filter = InternalFilter;
-
         }
 
         private bool InternalFilter(object o)
         {
             foreach (var filter in _filters)
             {
-                if (!filter.Filter(o))
+                if (filter.Filter != null && !filter.Filter(o))
                 {
                     return false;
                 }
@@ -40,7 +37,7 @@ namespace FilmsChanger.Service
         /// <summary>
         /// Добавить фильтр
         /// </summary>
-        public void AddFilter(string name,Predicate<object> filter)
+        public void AddFilter(FilterEnum name,Predicate<object> filter)
         {
             var filt = new MultiFilter()
             {
@@ -54,9 +51,9 @@ namespace FilmsChanger.Service
         /// <summary>
         /// Удалить фильтр
         /// </summary>
-        public void RemoveFilter(string name)
+        public void RemoveFilter(FilterEnum name)
         {
-            var filt = _filters.Where(x => x.Name.Contains(name)).SingleOrDefault();
+            var filt = _filters.SingleOrDefault(x => x.Name == name);
             if (filt != null)
             {
                 _filters.Remove(filt);
